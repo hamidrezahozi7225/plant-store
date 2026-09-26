@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { UserModelTypes } from "./auth.schema";
 import {
   CheckOtpService,
   SendOtpService,
