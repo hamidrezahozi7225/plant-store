@@ -4,12 +4,14 @@ import { ErrorHandler } from "./lib/helper/errorHandler";
 import AllRouter from "./module/routes";
 import { configDotenv } from "dotenv";
 import { ConnectDb } from "./lib/helper/connextDB";
+import path from "path";
 
 configDotenv();
 export const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/upload", express.static(path.join(__dirname, "../upload")));
 
 app.use(AllRouter);
 
