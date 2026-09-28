@@ -1,5 +1,16 @@
 import { model, Schema } from "mongoose";
 
+const discountSchema = new Schema({
+  persentage: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  expiresIn: {
+    type: Date,
+  },
+});
+
 const ProductSchema = new Schema({
   name: {
     type: String,
@@ -22,8 +33,7 @@ const ProductSchema = new Schema({
     required: true,
   },
   discount: {
-    type: Number,
-    default: 0,
+    type: discountSchema,
   },
   images: {
     type: [String],

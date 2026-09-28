@@ -1,10 +1,22 @@
 import { CategoryModel } from "../category/category.model";
 import { ProductModel } from "./product.model";
-import { CreateProductType, UpdateProductType } from "./product.schema";
+import {
+  CreateProductType,
+  DiscountType,
+  UpdateProductType,
+} from "./product.schema";
 
 export const createProductService = async (dto: CreateProductType) => {
-  const { amount, categoryId, description, discount, name, price, images } =
-    dto;
+  const {
+    amount,
+    categoryId,
+    description,
+    expiresIn,
+    persentage,
+    name,
+    price,
+    images,
+  } = dto;
 
   const category = await CategoryModel.findById(categoryId);
   if (!category) throw new Error("category not found");
@@ -14,7 +26,10 @@ export const createProductService = async (dto: CreateProductType) => {
     description,
     name,
     price,
-    discount,
+    discount: {
+      expiresIn,
+      persentage,
+    },
     images,
     cateogoryId: category._id,
     categoriesId: [...(category.parentsId ?? []), category._id],
@@ -46,8 +61,16 @@ export const updateProductService = async (
   const product = await ProductModel.findById(id);
   if (!product) throw new Error("product not found");
 
-  const { amount, categoryId, description, images, name, price, discount } =
-    dto;
+  const {
+    amount,
+    categoryId,
+    description,
+    images,
+    name,
+    price,
+    expiresIn,
+    persentage,
+  } = dto;
 
   // 1️⃣ فقط وقتی categoryId فرستاده شده و تغییر کرده
   if (categoryId && product?.cateogoryId?.toString() !== categoryId) {
@@ -64,7 +87,11 @@ export const updateProductService = async (
   if (images !== undefined) product.images = images;
   if (name !== undefined) product.name = name;
   if (price !== undefined) product.price = price;
-  if (discount !== undefined) product.discount = discount;
+  if (persentage !== undefined)
+    product.discount = {
+      persentage,
+      expiresIn,
+    };
 
   await product.save();
   return product;
@@ -72,5 +99,20 @@ export const updateProductService = async (
 
 export const deleteProductService = async (id: string) => {
   await ProductModel.deleteOne({ _id: id });
+  return true;
+};
+
+export const updateDiscountService = async (dto: DiscountType) => {
+  const { expiresIn, id, persentage } = dto;
+
+  const product = await ProductModel.findById(id);
+  if (!product) throw new Error("Product Not Found");
+
+  product.discount = {
+    persentage,
+    expiresIn,
+  };
+
+  await product.save();
   return true;
 };

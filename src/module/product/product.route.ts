@@ -4,6 +4,7 @@ import { IsAdminMiddleWare } from "../../lib/middleware/isAdmin";
 import { validate } from "../../lib/middleware/validate";
 import {
   CreateProductSchema,
+  DiscountSchema,
   GetSearchProductSchema,
   UpdateProductSchema,
 } from "./product.schema";
@@ -14,6 +15,7 @@ import {
   getProductByIdCOntroller,
   getProductController,
   getSearchProductController,
+  updateDiscountController,
   updateProductController,
 } from "./product.controller";
 
@@ -49,6 +51,14 @@ ProductRouter.delete(
   AuthorizeMiddleWare,
   IsAdminMiddleWare,
   deleteProductController,
+);
+
+ProductRouter.patch(
+  "/update_discount",
+  AuthorizeMiddleWare,
+  IsAdminMiddleWare,
+  validate({ body: DiscountSchema }),
+  updateDiscountController,
 );
 
 export default ProductRouter;

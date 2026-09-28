@@ -5,6 +5,7 @@ import {
   getProductByIdService,
   getProductService,
   getSearchProductService,
+  updateDiscountService,
   updateProductService,
 } from "./product.service";
 
@@ -97,6 +98,21 @@ export const deleteProductController = async (
     res.status(201).json({
       message: "delete successful",
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateDiscountController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  await updateDiscountService(req.body);
+  res.status(200).json({
+    message: "disount of product updated",
+  });
+  try {
   } catch (error) {
     next(error);
   }
