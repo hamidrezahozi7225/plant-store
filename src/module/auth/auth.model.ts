@@ -52,10 +52,13 @@ const UserSchema = new Schema({
   addresses: {
     type: [AddressesSchema],
   },
-  //   favoriteGoods: {
-  //     type: [Schema.Types.ObjectId],
-  //     ref: "Products",
-  //   },
+  favoriteGoods: {
+    type: [Schema.Types.ObjectId],
+    ref: "Product",
+  },
+  profileImage: {
+    type: String,
+  },
 });
 
 export const UserModel = model("users", UserSchema);

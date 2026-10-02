@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { PaymentRequestService, PaymentVerifyService } from "./payment.service";
+import {
+  PaymentRequestService,
+  PaymentVerifyService,
+  PaymentViadWalletService,
+} from "./payment.service";
 
 export const PaymentRequestController = async (
   req: Request,
@@ -43,6 +47,21 @@ export const PaymentVerifyController = async (
         message: "error occured",
       });
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const PaymentViadWalletController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    await PaymentViadWalletService(req.user.id, req.body.amount);
+    res.status(200).json({
+      message: "payment seuccessful",
+    });
   } catch (error) {
     next(error);
   }

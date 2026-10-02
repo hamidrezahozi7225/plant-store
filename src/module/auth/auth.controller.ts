@@ -4,6 +4,8 @@ import {
   SendOtpService,
   SignInService,
   SignUpService,
+  UpdateUserPasswordService,
+  UpdateUserService,
 } from "./auth.service";
 
 export const SignUpController = async (
@@ -66,6 +68,36 @@ export const SignInController = async (
       message: "login successful",
       accessToken,
       refreshToken,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const UpdateUserController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  await UpdateUserService(req.user.id, req.body);
+  res.status(200).json({
+    message: "update profile successful",
+  });
+  try {
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const UpdateUserPasswordController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    await UpdateUserPasswordService(req.user.id, req.body);
+    res.status(200).json({
+      message: "password updated",
     });
   } catch (error) {
     next(error);

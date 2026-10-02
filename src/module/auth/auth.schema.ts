@@ -41,3 +41,28 @@ export const SignInModelSchema = z.object({
 });
 
 export type SignInModelTypes = z.infer<typeof SignInModelSchema>;
+
+export const UpdateProfileModelSchema = z.object({
+  addresses: z
+    .array(
+      z.object({
+        address: z.string(),
+        plate: z.coerce.number(),
+        postalCode: z
+          .string()
+          .regex(/^\d{10}$/, "postal code must be 10 digits"),
+      }),
+    )
+    .optional(),
+  password: z.string().min(8),
+  profileImage: z.string().optional(),
+});
+
+export type UpdateProfileModelType = z.infer<typeof UpdateProfileModelSchema>;
+
+export const UpdateUserPasswordSchema = z.object({
+  password: z.string().min(8),
+  newPassword: z.string().min(8),
+});
+
+export type UpdateUserPasswordType = z.infer<typeof UpdateUserPasswordSchema>;

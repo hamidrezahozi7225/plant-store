@@ -6,3 +6,9 @@ export const PaymentRequestSchema = z.object({
 });
 
 export type PaymentRequestSchema = z.infer<typeof PaymentRequestSchema>;
+
+export const PaymentViaWalletSchema = z.object({
+  amount: z.coerce.number(),
+});
+
+export type PaymentViaWalletType = z.infer<typeof PaymentViaWalletSchema>;

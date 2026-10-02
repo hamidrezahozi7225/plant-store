@@ -4,6 +4,7 @@ import { PaymentRequestSchema } from "./payment.schema";
 import { PaymentModel } from "./payment.model";
 import { BasketModel } from "../basket/basket.model";
 import { OrderModel } from "../order/order.model";
+import { WalletModel } from "../wallet/wallet.model";
 
 const zarinpal = axios.create({
   baseURL: "https://sandbox.zarinpal.com/pg/v4",
@@ -87,4 +88,32 @@ export const PaymentVerifyService = async (
       throw error;
     }
   }
+};
+
+export const PaymentViadWalletService = async (
+  userId: string,
+  amount: number,
+) => {
+  const wallet = await WalletModel.findOne({ userId });
+  if (!wallet) throw new Error("please charge wallet");
+
+  if (
+    wallet.amount === undefined ||
+    (wallet.amount && wallet?.amount < amount)
+  ) {
+    throw new Error(
+      "Your Bull wallet balance is less than the payment amount.",
+    );
+  }
+
+  const basket = await BasketModel.find({ userId: userId });
+  if (!basket.length) throw new Error("basket not found");
+  await OrderModel.create({
+    products: basket,
+  });
+  await BasketModel.deleteMany({ userId: userId });
+
+  wallet.amount = wallet.amount! - amount;
+  await wallet.save();
+  return true;
 };

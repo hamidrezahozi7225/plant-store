@@ -4,6 +4,8 @@ import {
   CheckOtpModelTypes,
   SendOtpModelTypes,
   SignInModelTypes,
+  UpdateProfileModelType,
+  UpdateUserPasswordType,
   UserModelTypes,
 } from "./auth.schema";
 import jwt from "jsonwebtoken";
@@ -98,4 +100,41 @@ export const SignInService = async (dto: SignInModelTypes) => {
   });
 
   return { accessToken, refreshToken };
+};
+
+export const UpdateUserService = async (
+  userId: string,
+  dto: UpdateProfileModelType,
+) => {
+  const { password, addresses, profileImage } = dto;
+  const User = await UserModel.findById(userId);
+  if (!User) throw new Error("user not found");
+
+  const comparePassword = compareSync(password, User.password!);
+  if (!comparePassword) throw new Error("password is not correct");
+
+  User.profileImage = profileImage;
+  if (addresses && addresses?.length > 0) {
+    User.addresses.push(...addresses);
+  }
+  await User.save();
+  return true;
+};
+
+export const UpdateUserPasswordService = async (
+  userId: string,
+  dto: UpdateUserPasswordType,
+) => {
+  const { newPassword, password } = dto;
+  const user = await UserModel.findById(userId);
+  if (!user) throw new Error("User Not Found");
+
+  const comparePassword = compareSync(password, user.password!);
+  if (!comparePassword) throw new Error("password is not correct");
+
+  const hashPassword = await hash(newPassword!, 10);
+
+  user.password = hashPassword;
+  await user.save();
+  return true;
 };

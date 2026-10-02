@@ -7,10 +7,12 @@ import DiscountRouter from "./discount/discount.routes";
 import BasketRouter from "./basket/basket.route";
 import PaymentRouter from "./payment/payment.routes";
 import OrderRouter from "./order/order.routes";
+import WalletRouter from "./wallet/wallet.routes";
 
 const AllRouter = Router();
 
 AllRouter.use("/auth", AuthRouter);
+AllRouter.use("/wallet", WalletRouter);
 AllRouter.use("/category", CategoryRouter);
 AllRouter.use("/product", ProductRouter);
 AllRouter.use("/upload", UploadRouter);

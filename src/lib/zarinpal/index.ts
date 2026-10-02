@@ -1,8 +1,10 @@
-import ZarinPal from "zarinpal-node-sdk";
+import axios from "axios";
 
-const zarinpal = new ZarinPal({
-  merchantId: "your-merchant-id",
-  sandbox: true,
+const zarinpal = axios.create({
+  baseURL: "https://sandbox.zarinpal.com/pg/v4",
+  headers: {
+    accept: "application/json",
+    "content-type": "application/json",
+  },
 });
-
 export default zarinpal;

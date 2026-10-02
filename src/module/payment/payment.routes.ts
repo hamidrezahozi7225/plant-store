@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { AuthorizeMiddleWare } from "../../lib/middleware/authorize";
 import { validate } from "../../lib/middleware/validate";
-import { PaymentRequestSchema } from "./payment.schema";
+import { PaymentRequestSchema, PaymentViaWalletSchema } from "./payment.schema";
 import {
   PaymentRequestController,
   PaymentVerifyController,
+  PaymentViadWalletController,
 } from "./payent.controller";
 
 const PaymentRouter = Router();
@@ -17,5 +18,12 @@ PaymentRouter.post(
 );
 
 PaymentRouter.get("/verify", PaymentVerifyController);
+
+PaymentRouter.post(
+  "/wallet",
+  AuthorizeMiddleWare,
+  validate({ body: PaymentViaWalletSchema }),
+  PaymentViadWalletController,
+);
 
 export default PaymentRouter;
